@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario - Los Minecrafteros</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@600;700&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: radial-gradient(circle at center, #082e0d 0%, #031405 100%);
+      color: #e8ffe8; font-family: 'Rajdhani', sans-serif;
+      padding: 40px 15px; display: flex; justify-content: center;
+    }
+    .box {
+      width: 100%; max-width: 720px; background: rgba(5, 28, 9, 0.95);
+      border: 2px solid #39ff14; border-radius: 16px; padding: 35px;
+      box-shadow: 0 0 25px rgba(57, 255, 20, 0.35);
+    }
+    h2 { font-family: 'Orbitron', sans-serif; color: #39ff14; text-align: center; margin-bottom: 25px; text-shadow: 0 0 10px #39ff14; }
+    .group { margin-bottom: 18px; }
+    label { display: block; color: #39ff14; font-size: 1.15rem; font-weight: 700; margin-bottom: 6px; }
+    input, textarea {
+      width: 100%; background: #020f04; border: 1.5px solid rgba(57, 255, 20, 0.5);
+      border-radius: 8px; padding: 12px; color: #fff; font-family: 'Rajdhani', sans-serif; font-size: 1.1rem;
+    }
+    input:focus, textarea:focus { outline: none; border-color: #39ff14; box-shadow: 0 0 10px #39ff14; }
+    textarea { min-height: 85px; resize: vertical; }
+    .btn {
+      width: 100%; background: transparent; color: #39ff14; font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem; font-weight: 700; padding: 15px; border: 2px solid #39ff14;
+      border-radius: 8px; cursor: pointer; margin-top: 10px;
+    }
+    .btn:hover { background: #39ff14; color: #021104; box-shadow: 0 0 20px #39ff14; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>FORMULARIO DE STAFF</h2>
+    <form id="form">
+      <div class="group"><label>Nick:</label><input type="text" id="nick" required></div>
+      <div class="group"><label>ID de usuario:</label><input type="text" id="user_id" required></div>
+      <div class="group"><label>Edad:</label><input type="number" id="edad" required></div>
+      <div class="group"><label>¿Por qué quieres formar parte del staff?</label><textarea id="razon" required></textarea></div>
+      <div class="group"><label>¿Cuál es tu disponibilidad diaria?</label><input type="text" id="disponibilidad" required></div>
+      <div class="group"><label>¿Qué se hace en caso de raid?</label><textarea id="caso_raid" required></textarea></div>
+      <div class="group"><label>¿Qué se hace si dos miembros discuten?</label><textarea id="caso_discusion" required></textarea></div>
+      <div class="group"><label>¿Qué se hace en caso de que un usuario no esté contento con una sanción?</label><textarea id="caso_sancion" required></textarea></div>
+      <div class="group"><label>País:</label><input type="text" id="pais" required></div>
+      <button type="submit" id="btn" class="btn">ENVIAR POSTULACIÓN</button>
+    </form>
+  </div>
+
+  <script>
+    const db = window.supabase.createClient('https://hdgupavajeemxubyswow.supabase.co', 'sb_publishable_NT0nPRs9TvXMxvFp1EMi5A_C_GqwOqW');
+
+    document.getElementById('form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btn');
+      btn.disabled = true;
+      btn.innerText = 'ENVIANDO...';
+
+      const { error } = await db.from('postulaciones').insert([{
+        nick: document.getElementById('nick').value.trim(),
+        user_id: document.getElementById('user_id').value.trim(),
+        edad: document.getElementById('edad').value.trim(),
+        razon: document.getElementById('razon').value.trim(),
+        disponibilidad: document.getElementById('disponibilidad').value.trim(),
+        caso_raid: document.getElementById('caso_raid').value.trim(),
+        caso_discusion: document.getElementById('caso_discusion').value.trim(),
+        caso_sancion: document.getElementById('caso_sancion').value.trim(),
+        pais: document.getElementById('pais').value.trim(),
+        estado: 'en_espera'
+      }]);
+
+      if (error) {
+        alert('Error: ' + error.message);
+        btn.disabled = false;
+        btn.innerText = 'ENVIAR POSTULACIÓN';
+      } else {
+        window.location.href = 'exito.html';
+      }
+    });
+  </script>
+</body>
+</html>
