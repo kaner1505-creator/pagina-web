@@ -11,9 +11,8 @@
     :root {
       --neon-green: #39ff14;
       --dark-green-bg: #031405;
-      --panel-bg: rgba(5, 28, 9, 0.92);
+      --panel-bg: rgba(5, 28, 9, 0.95);
       --neon-red: #ff2a5f;
-      --neon-yellow: #ffe600;
     }
 
     * {
@@ -27,14 +26,12 @@
       color: #e8ffe8;
       font-family: 'Rajdhani', sans-serif;
       min-height: 100vh;
-      overflow-x: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
       position: relative;
     }
 
-    /* Cuadrícula neón de fondo */
     body::before {
       content: "";
       position: fixed;
@@ -47,7 +44,6 @@
       z-index: 0;
     }
 
-    /* Emoji de tierra levitando */
     .floating-earth {
       position: fixed;
       top: 25px;
@@ -64,7 +60,6 @@
       50% { transform: translateY(-18px) rotate(5deg); }
     }
 
-    /* Botón de escudo en esquina izquierda */
     .shield-btn {
       position: fixed;
       top: 25px;
@@ -74,7 +69,7 @@
       background: rgba(3, 20, 5, 0.9);
       border: 2px solid var(--neon-green);
       border-radius: 10px;
-      box-shadow: 0 0 12px var(--neon-green), inset 0 0 8px rgba(57, 255, 20, 0.4);
+      box-shadow: 0 0 12px var(--neon-green);
       color: var(--neon-green);
       font-size: 1.7rem;
       display: flex;
@@ -87,11 +82,10 @@
 
     .shield-btn:hover {
       transform: scale(1.08);
-      box-shadow: 0 0 22px var(--neon-green), inset 0 0 12px var(--neon-green);
+      box-shadow: 0 0 22px var(--neon-green);
       background: rgba(57, 255, 20, 0.15);
     }
 
-    /* Contenedores principales */
     .screen {
       display: none;
       width: 92%;
@@ -100,19 +94,13 @@
       border: 2px solid var(--neon-green);
       border-radius: 16px;
       padding: 40px 35px;
-      box-shadow: 0 0 25px rgba(57, 255, 20, 0.35), inset 0 0 15px rgba(57, 255, 20, 0.15);
+      box-shadow: 0 0 25px rgba(57, 255, 20, 0.35);
       z-index: 5;
       margin: 85px auto 40px auto;
-      animation: fadeIn 0.4s ease;
     }
 
     .screen.active {
       display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.97); }
-      to { opacity: 1; transform: scale(1); }
     }
 
     h1, h2, h3 {
@@ -122,7 +110,6 @@
       text-align: center;
     }
 
-    /* Pantalla Inicio */
     .intro-box {
       text-align: center;
       padding: 20px 10px;
@@ -131,7 +118,6 @@
     .intro-box h1 {
       font-size: 2.3rem;
       margin-bottom: 18px;
-      letter-spacing: 1.5px;
     }
 
     .intro-box p {
@@ -141,7 +127,6 @@
       margin-bottom: 35px;
     }
 
-    /* Botones Neón */
     .neon-btn {
       background: transparent;
       color: var(--neon-green);
@@ -163,12 +148,6 @@
       box-shadow: 0 0 28px var(--neon-green);
     }
 
-    .neon-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    /* Formulario */
     .form-group {
       margin-bottom: 20px;
       text-align: left;
@@ -180,7 +159,6 @@
       font-weight: 700;
       color: var(--neon-green);
       margin-bottom: 7px;
-      text-shadow: 0 0 5px rgba(57, 255, 20, 0.4);
     }
 
     .form-group input,
@@ -194,7 +172,6 @@
       font-family: 'Rajdhani', sans-serif;
       font-size: 1.1rem;
       outline: none;
-      transition: 0.2s;
     }
 
     .form-group input:focus,
@@ -208,7 +185,6 @@
       min-height: 85px;
     }
 
-    /* Pantalla Login Staff */
     .login-box {
       max-width: 420px;
       text-align: center;
@@ -216,14 +192,12 @@
 
     .error-msg {
       color: var(--neon-red);
-      text-shadow: 0 0 8px rgba(255, 42, 95, 0.6);
       margin-top: 12px;
       font-weight: 700;
       font-size: 1.1rem;
       display: none;
     }
 
-    /* Panel Staff */
     .staff-panel {
       max-width: 1050px;
       padding: 25px;
@@ -264,7 +238,6 @@
       font-size: 0.9rem;
       cursor: pointer;
       text-align: left;
-      transition: 0.2s;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -282,7 +255,6 @@
       overflow-y: auto;
     }
 
-    /* Tarjetas de postulaciones */
     .app-card {
       background: rgba(3, 22, 6, 0.9);
       border: 1.5px solid rgba(57, 255, 20, 0.45);
@@ -313,7 +285,6 @@
       color: #a8e6a3;
     }
 
-    /* Vista detallada */
     .detail-box {
       background: rgba(2, 15, 4, 0.95);
       border: 1.5px solid var(--neon-green);
@@ -356,7 +327,6 @@
       font-weight: bold;
       border-radius: 8px;
       cursor: pointer;
-      transition: 0.2s;
     }
 
     .btn-accept:hover {
@@ -375,7 +345,6 @@
       font-weight: bold;
       border-radius: 8px;
       cursor: pointer;
-      transition: 0.2s;
     }
 
     .btn-reject:hover {
@@ -403,152 +372,97 @@
 
     @media (max-width: 720px) {
       .staff-layout { flex-direction: column; }
-      .staff-sidebar { width: 100%; border-right: none; border-bottom: 1.5px solid rgba(57, 255, 20, 0.3); padding-bottom: 15px; padding-right: 0; }
+      .staff-sidebar { width: 100%; border-right: none; border-bottom: 1.5px solid rgba(57, 255, 20, 0.3); padding-bottom: 15px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Emoji de tierra levitando -->
   <div class="floating-earth" title="Los Minecrafteros">🌍</div>
+  <button class="shield-btn" id="btn-shield" title="Panel de Staff">🛡️</button>
 
-  <!-- Botón de escudo en esquina izquierda -->
-  <button class="shield-btn" onclick="abrirLoginStaff()" title="Panel de Staff">🛡️</button>
-
-  <!-- 1. PANTALLA DE INICIO -->
+  <!-- 1. PANTALLA INICIO -->
   <div id="screen-intro" class="screen active">
     <div class="intro-box">
       <h1>POSTULACIONES<br>LOS MINECRAFTEROS</h1>
       <p>
         ¡Bienvenido al portal oficial de reclutamiento de <strong>Los Minecrafteros</strong>!<br>
-        Buscamos personas responsables, activas y comprometidas para ayudar a mantener el orden y hacer crecer nuestra comunidad. Si crees tener lo necesario para formar parte de nuestro equipo de Staff, completa el formulario con total sinceridad.
+        Buscamos personas responsables, activas y comprometidas para ayudar a mantener el orden en nuestra comunidad.
       </p>
-      <button class="neon-btn" onclick="mostrarPantalla('screen-form')">Click aquí para postularse</button>
+      <button class="neon-btn" id="btn-go-form">Click aquí para postularse</button>
     </div>
   </div>
 
-  <!-- 2. PANTALLA DE FORMULARIO -->
+  <!-- 2. PANTALLA FORMULARIO -->
   <div id="screen-form" class="screen">
     <h2 style="margin-bottom: 25px;">FORMULARIO DE STAFF</h2>
-    <form id="postulacion-form" onsubmit="enviarPostulacion(event)">
-      
-      <div class="form-group">
-        <label>Nick:</label>
-        <input type="text" id="nick" required placeholder="Tu nombre o nick en el servidor">
-      </div>
-
-      <div class="form-group">
-        <label>ID de usuario:</label>
-        <input type="text" id="user_id" required placeholder="Ej: 123456789012345678">
-      </div>
-
-      <div class="form-group">
-        <label>Edad:</label>
-        <input type="number" id="edad" required min="10" max="99" placeholder="Tu edad actual">
-      </div>
-
-      <div class="form-group">
-        <label>¿Por qué quieres formar parte del staff?</label>
-        <textarea id="razon" required placeholder="Cuéntanos tus motivaciones..."></textarea>
-      </div>
-
-      <div class="form-group">
-        <label>¿Cuál es tu disponibilidad diaria?</label>
-        <input type="text" id="disponibilidad" required placeholder="Ej: 3 a 4 horas por las tardes">
-      </div>
-
-      <div class="form-group">
-        <label>¿Qué se hace en caso de raid?</label>
-        <textarea id="caso_raid" required placeholder="Explica los pasos que seguirías..."></textarea>
-      </div>
-
-      <div class="form-group">
-        <label>¿Qué se hace si dos miembros discuten?</label>
-        <textarea id="caso_discusion" required placeholder="¿Cómo manejarías la situación?"></textarea>
-      </div>
-
-      <div class="form-group">
-        <label>¿Qué se hace en caso de que un usuario no esté contento con una sanción?</label>
-        <textarea id="caso_sancion" required placeholder="Explica el procedimiento..."></textarea>
-      </div>
-
-      <div class="form-group">
-        <label>País:</label>
-        <input type="text" id="pais" required placeholder="Tu país de residencia">
-      </div>
-
+    <form id="postulacion-form">
+      <div class="form-group"><label>Nick:</label><input type="text" id="nick" required placeholder="Tu nick en el servidor"></div>
+      <div class="form-group"><label>ID de usuario:</label><input type="text" id="user_id" required placeholder="Ej: 1234567890"></div>
+      <div class="form-group"><label>Edad:</label><input type="number" id="edad" required min="10" max="99" placeholder="Tu edad"></div>
+      <div class="form-group"><label>¿Por qué quieres formar parte del staff?</label><textarea id="razon" required></textarea></div>
+      <div class="form-group"><label>¿Cuál es tu disponibilidad diaria?</label><input type="text" id="disponibilidad" required placeholder="Ej: 3 a 4 horas"></div>
+      <div class="form-group"><label>¿Qué se hace en caso de raid?</label><textarea id="caso_raid" required></textarea></div>
+      <div class="form-group"><label>¿Qué se hace si dos miembros discuten?</label><textarea id="caso_discusion" required></textarea></div>
+      <div class="form-group"><label>¿Qué se hace en caso de que un usuario no esté contento con una sanción?</label><textarea id="caso_sancion" required></textarea></div>
+      <div class="form-group"><label>País:</label><input type="text" id="pais" required placeholder="Tu país"></div>
       <div style="text-align: center; margin-top: 25px;">
         <button type="submit" id="btn-submit" class="neon-btn">Enviar Postulación</button>
       </div>
     </form>
   </div>
 
-  <!-- 3. PANTALLA DE ÉXITO -->
+  <!-- 3. PANTALLA ÉXITO -->
   <div id="screen-success" class="screen">
     <div class="intro-box">
       <div style="font-size: 4rem; margin-bottom: 15px;">✅</div>
       <h1>¡POSTULACIÓN ENVIADA CON ÉXITO!</h1>
-      <p style="margin-top: 15px;">
-        Tus respuestas han sido guardadas correctamente en nuestra base de datos.<br>
-        El equipo administrativo revisará tu solicitud pronto. <strong>Ya puedes cerrar esta ventana.</strong>
-      </p>
+      <p style="margin-top: 15px;">Tus respuestas se han guardado correctamente. Ya puedes cerrar esta ventana.</p>
     </div>
   </div>
 
-  <!-- 4. PANTALLA CONTRASEÑA STAFF -->
+  <!-- 4. PANTALLA LOGIN STAFF -->
   <div id="screen-login" class="screen login-box">
     <h2 style="margin-bottom: 20px;">ACCESO STAFF</h2>
-    <p style="margin-bottom: 20px; color: #b8f5b5;">Introduce la contraseña de administración:</p>
+    <p style="margin-bottom: 20px; color: #b8f5b5;">Introduce la contraseña:</p>
     <div class="form-group">
-      <input type="password" id="staff-pass" placeholder="Contraseña..." onkeyup="if(event.key === 'Enter') verificarPassword()">
+      <input type="password" id="staff-pass" placeholder="Contraseña...">
     </div>
     <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
-      <button class="btn-small" onclick="mostrarPantalla('screen-intro')">Volver</button>
-      <button class="neon-btn" style="padding: 10px 24px; font-size: 1rem;" onclick="verificarPassword()">Siguiente</button>
+      <button class="btn-small" id="btn-login-back">Volver</button>
+      <button class="neon-btn" id="btn-login-submit" style="padding: 10px 24px; font-size: 1rem;">Siguiente</button>
     </div>
     <p id="login-error" class="error-msg">❌ Contraseña incorrecta</p>
   </div>
 
-  <!-- 5. PANEL DE STAFF -->
+  <!-- 5. PANEL STAFF -->
   <div id="screen-staff" class="screen staff-panel">
     <div class="staff-header">
-      <h2 style="font-size: 1.4rem;">🛡️ PANEL DE STAFF - LOS MINECRAFTEROS</h2>
-      <button class="btn-small" onclick="mostrarPantalla('screen-intro')">Salir del Panel</button>
+      <h2 style="font-size: 1.4rem;">🛡️ PANEL DE STAFF</h2>
+      <button class="btn-small" id="btn-staff-salir">Salir</button>
     </div>
-
     <div class="staff-layout">
-      <!-- Menú izquierdo -->
       <div class="staff-sidebar">
-        <button class="tab-btn active" id="tab-en_espera" onclick="cambiarTab('en_espera')">
-          <span>⏳ En espera</span>
-          <span id="count-en_espera">0</span>
-        </button>
-        <button class="tab-btn" id="tab-aceptadas" onclick="cambiarTab('aceptadas')">
-          <span>✅ Aceptadas</span>
-          <span id="count-aceptadas">0</span>
-        </button>
-        <button class="tab-btn" id="tab-rechazadas" onclick="cambiarTab('rechazadas')">
-          <span>❌ Rechazadas</span>
-          <span id="count-rechazadas">0</span>
-        </button>
+        <button class="tab-btn active" id="tab-en_espera"><span>⏳ En espera</span><span id="count-en_espera">0</span></button>
+        <button class="tab-btn" id="tab-aceptadas"><span>✅ Aceptadas</span><span id="count-aceptadas">0</span></button>
+        <button class="tab-btn" id="tab-rechazadas"><span>❌ Rechazadas</span><span id="count-rechazadas">0</span></button>
       </div>
-
-      <!-- Contenido derecho -->
       <div class="staff-content" id="staff-content">
-        <p style="text-align: center; margin-top: 40px;">Cargando postulaciones...</p>
+        <p style="text-align: center; margin-top: 40px;">Cargando...</p>
       </div>
     </div>
   </div>
 
   <script>
-    // ==========================================
-    // CONFIGURACIÓN DE SUPABASE (PEGA TUS DATOS AQUÍ)
-    // ==========================================
-    const SUPABASE_URL = 'https://hdgupavajeemxubyswow.supabase.co';
+    const SUPABASE_URL = 'httpshdgupavajeemxubyswow.supabase.co'.replace('https', 'https://');
     const SUPABASE_ANON_KEY = 'sb_publishable_NT0nPRs9TvXMxvFp1EMi5A_C_GqwOqW';
-    // ==========================================
-
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    
+    let supabaseClient = null;
+    try {
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    } catch(err) {
+      console.error("Error al iniciar Supabase:", err);
+    }
 
     let todasLasPostulaciones = [];
     let tabActual = 'en_espera';
@@ -558,14 +472,56 @@
       document.getElementById(id).classList.add('active');
     }
 
-    // Enviar postulación a Supabase
-    async function enviarPostulacion(e) {
+    // Eventos de botones
+    document.getElementById('btn-go-form').addEventListener('click', () => mostrarPantalla('screen-form'));
+    document.getElementById('btn-shield').addEventListener('click', () => {
+      document.getElementById('staff-pass').value = '';
+      document.getElementById('login-error').style.display = 'none';
+      mostrarPantalla('screen-login');
+    });
+    document.getElementById('btn-login-back').addEventListener('click', () => mostrarPantalla('screen-intro'));
+    document.getElementById('btn-staff-salir').addEventListener('click', () => mostrarPantalla('screen-intro'));
+
+    // Login Staff
+    function verificarPass() {
+      const pass = document.getElementById('staff-pass').value;
+      if (pass === 'Los-MC-2026') {
+        mostrarPantalla('screen-staff');
+        cargarPostulaciones();
+      } else {
+        document.getElementById('login-error').style.display = 'block';
+      }
+    }
+    document.getElementById('btn-login-submit').addEventListener('click', verificarPass);
+    document.getElementById('staff-pass').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') verificarPass();
+    });
+
+    // Pestañas del Panel
+    document.getElementById('tab-en_espera').addEventListener('click', () => cambiarTab('en_espera'));
+    document.getElementById('tab-aceptadas').addEventListener('click', () => cambiarTab('aceptadas'));
+    document.getElementById('tab-rechazadas').addEventListener('click', () => cambiarTab('rechazadas'));
+
+    function cambiarTab(tab) {
+      tabActual = tab;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + tab).classList.add('active');
+      renderizarLista();
+    }
+
+    // Enviar Formulario
+    document.getElementById('postulacion-form').addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (!supabaseClient) {
+        alert('Error de conexión con la base de datos.');
+        return;
+      }
+
       const btn = document.getElementById('btn-submit');
       btn.disabled = true;
       btn.innerText = 'Enviando...';
 
-      const nuevaPostulacion = {
+      const nueva = {
         nick: document.getElementById('nick').value.trim(),
         user_id: document.getElementById('user_id').value.trim(),
         edad: document.getElementById('edad').value.trim(),
@@ -578,42 +534,24 @@
         estado: 'en_espera'
       };
 
-      const { error } = await supabaseClient
-        .from('postulaciones')
-        .insert([nuevaPostulacion]);
+      const { error } = await supabaseClient.from('postulaciones').insert([nueva]);
 
       if (error) {
-        alert('Error al enviar la postulación. Revisa la configuración de Supabase: ' + error.message);
+        alert('Error al enviar: ' + error.message);
         btn.disabled = false;
         btn.innerText = 'Enviar Postulación';
       } else {
         document.getElementById('postulacion-form').reset();
+        btn.disabled = false;
+        btn.innerText = 'Enviar Postulación';
         mostrarPantalla('screen-success');
       }
-    }
+    });
 
-    // Abrir Login de Staff
-    function abrirLoginStaff() {
-      document.getElementById('staff-pass').value = '';
-      document.getElementById('login-error').style.display = 'none';
-      mostrarPantalla('screen-login');
-    }
-
-    // Verificar contraseña
-    function verificarPassword() {
-      const pass = document.getElementById('staff-pass').value;
-      if (pass === 'Los-MC-2026') {
-        mostrarPantalla('screen-staff');
-        cargarPostulaciones();
-      } else {
-        document.getElementById('login-error').style.display = 'block';
-      }
-    }
-
-    // Cargar datos desde Supabase
+    // Cargar datos de Supabase
     async function cargarPostulaciones() {
       const contenedor = document.getElementById('staff-content');
-      contenedor.innerHTML = '<p style="text-align:center; margin-top:40px;">Cargando desde la base de datos...</p>';
+      contenedor.innerHTML = '<p style="text-align:center; margin-top:40px;">Cargando...</p>';
 
       const { data, error } = await supabaseClient
         .from('postulaciones')
@@ -621,7 +559,7 @@
         .order('created_at', { ascending: false });
 
       if (error) {
-        contenedor.innerHTML = `<p style="color:var(--neon-red);">Error al cargar: ${error.message}</p>`;
+        contenedor.innerHTML = `<p style="color:var(--neon-red); text-align:center;">Error: ${error.message}</p>`;
         return;
       }
 
@@ -636,19 +574,12 @@
       document.getElementById('count-rechazadas').innerText = todasLasPostulaciones.filter(p => p.estado === 'rechazadas').length;
     }
 
-    function cambiarTab(tab) {
-      tabActual = tab;
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.getElementById('tab-' + tab).classList.add('active');
-      renderizarLista();
-    }
-
     function renderizarLista() {
       const contenedor = document.getElementById('staff-content');
       const filtradas = todasLasPostulaciones.filter(p => p.estado === tabActual);
 
       if (filtradas.length === 0) {
-        contenedor.innerHTML = `<p style="text-align:center; margin-top:40px; color:#88cc88; font-size:1.2rem;">No hay postulaciones en esta sección.</p>`;
+        contenedor.innerHTML = `<p style="text-align:center; margin-top:40px; color:#88cc88; font-size:1.2rem;">No hay postulaciones aquí.</p>`;
         return;
       }
 
@@ -656,14 +587,14 @@
       filtradas.forEach(post => {
         const card = document.createElement('div');
         card.className = 'app-card';
-        card.onclick = () => verDetalle(post.id);
         card.innerHTML = `
           <div class="app-card-info">
             <h4>${escapeHTML(post.nick)}</h4>
             <span>Edad: ${escapeHTML(post.edad)} años • País: ${escapeHTML(post.pais)}</span>
           </div>
-          <span style="color:var(--neon-green); font-weight:bold;">Ver postulación ➔</span>
+          <span style="color:var(--neon-green); font-weight:bold;">Ver ➔</span>
         `;
+        card.addEventListener('click', () => verDetalle(post.id));
         contenedor.appendChild(card);
       });
     }
@@ -675,31 +606,38 @@
       const contenedor = document.getElementById('staff-content');
       contenedor.innerHTML = `
         <div class="detail-box">
-          <button class="btn-small" style="margin-bottom: 15px;" onclick="renderizarLista()">⬅ Volver a la lista</button>
+          <button class="btn-small" id="btn-volver-lista" style="margin-bottom: 15px;">⬅ Volver</button>
           <h3 style="text-align:left; margin-bottom:18px; font-size:1.4rem;">Postulación de ${escapeHTML(post.nick)}</h3>
 
           <div class="detail-item"><strong>Nick:</strong><p>${escapeHTML(post.nick)}</p></div>
           <div class="detail-item"><strong>ID de usuario:</strong><p>${escapeHTML(post.user_id)}</p></div>
-          <div class="detail-item"><strong>Edad:</strong><p>${escapeHTML(post.edad)} años</p></div>
+          <div class="detail-item"><strong>Edad:</strong><p>${escapeHTML(post.edad)}</p></div>
           <div class="detail-item"><strong>País:</strong><p>${escapeHTML(post.pais)}</p></div>
-          <div class="detail-item"><strong>Disponibilidad diaria:</strong><p>${escapeHTML(post.disponibilidad)}</p></div>
-          <div class="detail-item"><strong>¿Por qué quiere formar parte del staff?:</strong><p>${escapeHTML(post.razon)}</p></div>
-          <div class="detail-item"><strong>¿Qué se hace en caso de raid?:</strong><p>${escapeHTML(post.caso_raid)}</p></div>
-          <div class="detail-item"><strong>¿Qué se hace si dos miembros discuten?:</strong><p>${escapeHTML(post.caso_discusion)}</p></div>
-          <div class="detail-item"><strong>¿Qué se hace si un usuario no está contento con una sanción?:</strong><p>${escapeHTML(post.caso_sancion)}</p></div>
+          <div class="detail-item"><strong>Disponibilidad:</strong><p>${escapeHTML(post.disponibilidad)}</p></div>
+          <div class="detail-item"><strong>¿Por qué quiere ser staff?:</strong><p>${escapeHTML(post.razon)}</p></div>
+          <div class="detail-item"><strong>Caso Raid:</strong><p>${escapeHTML(post.caso_raid)}</p></div>
+          <div class="detail-item"><strong>Caso Discusión:</strong><p>${escapeHTML(post.caso_discusion)}</p></div>
+          <div class="detail-item"><strong>Caso Sanción:</strong><p>${escapeHTML(post.caso_sancion)}</p></div>
 
           ${post.estado === 'en_espera' ? `
             <div class="action-buttons">
-              <button class="btn-accept" onclick="cambiarEstado(${post.id}, 'aceptadas')">✅ ACEPTAR</button>
-              <button class="btn-reject" onclick="cambiarEstado(${post.id}, 'rechazadas')">❌ RECHAZAR</button>
+              <button class="btn-accept" id="btn-acc-${post.id}">✅ ACEPTAR</button>
+              <button class="btn-reject" id="btn-rej-${post.id}">❌ RECHAZAR</button>
             </div>
           ` : `
             <div style="margin-top: 15px; font-weight: bold; color: var(--neon-green);">
-              Estado actual: ${post.estado === 'aceptadas' ? '✅ ACEPTADA' : '❌ RECHAZADA'}
+              Estado: ${post.estado === 'aceptadas' ? '✅ ACEPTADA' : '❌ RECHAZADA'}
             </div>
           `}
         </div>
       `;
+
+      document.getElementById('btn-volver-lista').addEventListener('click', renderizarLista);
+      
+      if (post.estado === 'en_espera') {
+        document.getElementById(`btn-acc-${post.id}`).addEventListener('click', () => cambiarEstado(post.id, 'aceptadas'));
+        document.getElementById(`btn-rej-${post.id}`).addEventListener('click', () => cambiarEstado(post.id, 'rechazadas'));
+      }
     }
 
     async function cambiarEstado(id, nuevoEstado) {
@@ -709,14 +647,12 @@
         .eq('id', id);
 
       if (error) {
-        alert('Error al actualizar el estado: ' + error.message);
+        alert('Error al actualizar: ' + error.message);
         return;
       }
 
-      const index = todasLasPostulaciones.findIndex(p => p.id === id);
-      if (index !== -1) {
-        todasLasPostulaciones[index].estado = nuevoEstado;
-      }
+      const idx = todasLasPostulaciones.findIndex(p => p.id === id);
+      if (idx !== -1) todasLasPostulaciones[idx].estado = nuevoEstado;
 
       actualizarContadores();
       renderizarLista();
