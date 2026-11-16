@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Postulaciones - Los Minecrafteros</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap');
+
+    :root {
+      --neon-green: #39ff14;
+      --dark-green-bg: #031405;
+      --panel-bg: rgba(5, 28, 9, 0.92);
+      --neon-red: #ff2a5f;
+      --neon-yellow: #ffe600;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: radial-gradient(circle at center, #082e0d 0%, var(--dark-green-bg) 100%);
+      color: #e8ffe8;
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    /* Cuadrícula neón de fondo */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-image: 
+        linear-gradient(rgba(57, 255, 20, 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(57, 255, 20, 0.07) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Emoji de tierra levitando */
+    .floating-earth {
+      position: fixed;
+      top: 25px;
+      right: 35px;
+      font-size: 3.5rem;
+      z-index: 10;
+      filter: drop-shadow(0 0 15px var(--neon-green));
+      animation: levitate 3s ease-in-out infinite;
+      user-select: none;
+    }
+
+    @keyframes levitate {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-18px) rotate(5deg); }
+    }
+
+    /* Botón de escudo en esquina izquierda */
+    .shield-btn {
+      position: fixed;
+      top: 25px;
+      left: 25px;
+      width: 55px;
+      height: 55px;
+      background: rgba(3, 20, 5, 0.9);
+      border: 2px solid var(--neon-green);
+      border-radius: 10px;
+      box-shadow: 0 0 12px var(--neon-green), inset 0 0 8px rgba(57, 255, 20, 0.4);
+      color: var(--neon-green);
+      font-size: 1.7rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      z-index: 50;
+      transition: 0.25s;
+    }
+
+    .shield-btn:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 22px var(--neon-green), inset 0 0 12px var(--neon-green);
+      background: rgba(57, 255, 20, 0.15);
+    }
+
+    /* Contenedores principales */
+    .screen {
+      display: none;
+      width: 92%;
+      max-width: 750px;
+      background: var(--panel-bg);
+      border: 2px solid var(--neon-green);
+      border-radius: 16px;
+      padding: 40px 35px;
+      box-shadow: 0 0 25px rgba(57, 255, 20, 0.35), inset 0 0 15px rgba(57, 255, 20, 0.15);
+      z-index: 5;
+      margin: 85px auto 40px auto;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.97); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    h1, h2, h3 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--neon-green);
+      text-shadow: 0 0 10px rgba(57, 255, 20, 0.7);
+      text-align: center;
+    }
+
+    /* Pantalla Inicio */
+    .intro-box {
+      text-align: center;
+      padding: 20px 10px;
+    }
+
+    .intro-box h1 {
+      font-size: 2.3rem;
+      margin-bottom: 18px;
+      letter-spacing: 1.5px;
+    }
+
+    .intro-box p {
+      font-size: 1.25rem;
+      line-height: 1.6;
+      color: #c8f7c5;
+      margin-bottom: 35px;
+    }
+
+    /* Botones Neón */
+    .neon-btn {
+      background: transparent;
+      color: var(--neon-green);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      padding: 15px 32px;
+      border: 2px solid var(--neon-green);
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(57, 255, 20, 0.5);
+      transition: 0.25s;
+      text-transform: uppercase;
+    }
+
+    .neon-btn:hover {
+      background: var(--neon-green);
+      color: #021104;
+      box-shadow: 0 0 28px var(--neon-green);
+    }
+
+    .neon-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Formulario */
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--neon-green);
+      margin-bottom: 7px;
+      text-shadow: 0 0 5px rgba(57, 255, 20, 0.4);
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      background: rgba(2, 15, 4, 0.9);
+      border: 1.5px solid rgba(57, 255, 20, 0.5);
+      border-radius: 8px;
+      padding: 12px 14px;
+      color: #ffffff;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.1rem;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--neon-green);
+      box-shadow: 0 0 12px rgba(57, 255, 20, 0.5);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 85px;
+    }
+
+    /* Pantalla Login Staff */
+    .login-box {
+      max-width: 420px;
+      text-align: center;
+    }
+
+    .error-msg {
+      color: var(--neon-red);
+      text-shadow: 0 0 8px rgba(255, 42, 95, 0.6);
+      margin-top: 12px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      display: none;
+    }
+
+    /* Panel Staff */
+    .staff-panel {
+      max-width: 1050px;
+      padding: 25px;
+    }
+
+    .staff-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1.5px solid rgba(57, 255, 20, 0.4);
+      padding-bottom: 15px;
+      margin-bottom: 20px;
+    }
+
+    .staff-layout {
+      display: flex;
+      gap: 20px;
+      min-height: 450px;
+    }
+
+    .staff-sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      border-right: 1.5px solid rgba(57, 255, 20, 0.3);
+      padding-right: 15px;
+    }
+
+    .tab-btn {
+      background: rgba(2, 18, 5, 0.8);
+      border: 1.5px solid rgba(57, 255, 20, 0.4);
+      color: #b8f5b5;
+      padding: 13px 15px;
+      border-radius: 8px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-align: left;
+      transition: 0.2s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .tab-btn:hover, .tab-btn.active {
+      background: rgba(57, 255, 20, 0.18);
+      border-color: var(--neon-green);
+      color: var(--neon-green);
+      box-shadow: 0 0 12px rgba(57, 255, 20, 0.4);
+    }
+
+    .staff-content {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    /* Tarjetas de postulaciones */
+    .app-card {
+      background: rgba(3, 22, 6, 0.9);
+      border: 1.5px solid rgba(57, 255, 20, 0.45);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .app-card:hover {
+      border-color: var(--neon-green);
+      box-shadow: 0 0 15px rgba(57, 255, 20, 0.35);
+      transform: translateX(4px);
+    }
+
+    .app-card-info h4 {
+      font-size: 1.25rem;
+      color: var(--neon-green);
+      margin-bottom: 4px;
+    }
+
+    .app-card-info span {
+      font-size: 1rem;
+      color: #a8e6a3;
+    }
+
+    /* Vista detallada */
+    .detail-box {
+      background: rgba(2, 15, 4, 0.95);
+      border: 1.5px solid var(--neon-green);
+      border-radius: 10px;
+      padding: 22px;
+    }
+
+    .detail-item {
+      margin-bottom: 14px;
+      border-bottom: 1px dashed rgba(57, 255, 20, 0.25);
+      padding-bottom: 8px;
+    }
+
+    .detail-item strong {
+      color: var(--neon-green);
+      display: block;
+      font-size: 1.05rem;
+      margin-bottom: 3px;
+    }
+
+    .detail-item p {
+      color: #ffffff;
+      font-size: 1.1rem;
+      white-space: pre-wrap;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 22px;
+    }
+
+    .btn-accept {
+      flex: 1;
+      background: rgba(57, 255, 20, 0.15);
+      border: 2px solid var(--neon-green);
+      color: var(--neon-green);
+      padding: 12px;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-accept:hover {
+      background: var(--neon-green);
+      color: #000;
+      box-shadow: 0 0 18px var(--neon-green);
+    }
+
+    .btn-reject {
+      flex: 1;
+      background: rgba(255, 42, 95, 0.15);
+      border: 2px solid var(--neon-red);
+      color: var(--neon-red);
+      padding: 12px;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-reject:hover {
+      background: var(--neon-red);
+      color: #fff;
+      box-shadow: 0 0 18px var(--neon-red);
+    }
+
+    .btn-small {
+      background: transparent;
+      border: 1px solid var(--neon-green);
+      color: var(--neon-green);
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .btn-small:hover {
+      background: var(--neon-green);
+      color: #000;
+    }
+
+    @media (max-width: 720px) {
+      .staff-layout { flex-direction: column; }
+      .staff-sidebar { width: 100%; border-right: none; border-bottom: 1.5px solid rgba(57, 255, 20, 0.3); padding-bottom: 15px; padding-right: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Emoji de tierra levitando -->
+  <div class="floating-earth" title="Los Minecrafteros">🌍</div>
+
+  <!-- Botón de escudo en esquina izquierda -->
+  <button class="shield-btn" onclick="abrirLoginStaff()" title="Panel de Staff">🛡️</button>
+
+  <!-- 1. PANTALLA DE INICIO -->
+  <div id="screen-intro" class="screen active">
+    <div class="intro-box">
+      <h1>POSTULACIONES<br>LOS MINECRAFTEROS</h1>
+      <p>
+        ¡Bienvenido al portal oficial de reclutamiento de <strong>Los Minecrafteros</strong>!<br>
+        Buscamos personas responsables, activas y comprometidas para ayudar a mantener el orden y hacer crecer nuestra comunidad. Si crees tener lo necesario para formar parte de nuestro equipo de Staff, completa el formulario con total sinceridad.
+      </p>
+      <button class="neon-btn" onclick="mostrarPantalla('screen-form')">Click aquí para postularse</button>
+    </div>
+  </div>
+
+  <!-- 2. PANTALLA DE FORMULARIO -->
+  <div id="screen-form" class="screen">
+    <h2 style="margin-bottom: 25px;">FORMULARIO DE STAFF</h2>
+    <form id="postulacion-form" onsubmit="enviarPostulacion(event)">
+      
+      <div class="form-group">
+        <label>Nick:</label>
+        <input type="text" id="nick" required placeholder="Tu nombre o nick en el servidor">
+      </div>
+
+      <div class="form-group">
+        <label>ID de usuario:</label>
+        <input type="text" id="user_id" required placeholder="Ej: 123456789012345678">
+      </div>
+
+      <div class="form-group">
+        <label>Edad:</label>
+        <input type="number" id="edad" required min="10" max="99" placeholder="Tu edad actual">
+      </div>
+
+      <div class="form-group">
+        <label>¿Por qué quieres formar parte del staff?</label>
+        <textarea id="razon" required placeholder="Cuéntanos tus motivaciones..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>¿Cuál es tu disponibilidad diaria?</label>
+        <input type="text" id="disponibilidad" required placeholder="Ej: 3 a 4 horas por las tardes">
+      </div>
+
+      <div class="form-group">
+        <label>¿Qué se hace en caso de raid?</label>
+        <textarea id="caso_raid" required placeholder="Explica los pasos que seguirías..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>¿Qué se hace si dos miembros discuten?</label>
+        <textarea id="caso_discusion" required placeholder="¿Cómo manejarías la situación?"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>¿Qué se hace en caso de que un usuario no esté contento con una sanción?</label>
+        <textarea id="caso_sancion" required placeholder="Explica el procedimiento..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>País:</label>
+        <input type="text" id="pais" required placeholder="Tu país de residencia">
+      </div>
+
+      <div style="text-align: center; margin-top: 25px;">
+        <button type="submit" id="btn-submit" class="neon-btn">Enviar Postulación</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- 3. PANTALLA DE ÉXITO -->
+  <div id="screen-success" class="screen">
+    <div class="intro-box">
+      <div style="font-size: 4rem; margin-bottom: 15px;">✅</div>
+      <h1>¡POSTULACIÓN ENVIADA CON ÉXITO!</h1>
+      <p style="margin-top: 15px;">
+        Tus respuestas han sido guardadas correctamente en nuestra base de datos.<br>
+        El equipo administrativo revisará tu solicitud pronto. <strong>Ya puedes cerrar esta ventana.</strong>
+      </p>
+    </div>
+  </div>
+
+  <!-- 4. PANTALLA CONTRASEÑA STAFF -->
+  <div id="screen-login" class="screen login-box">
+    <h2 style="margin-bottom: 20px;">ACCESO STAFF</h2>
+    <p style="margin-bottom: 20px; color: #b8f5b5;">Introduce la contraseña de administración:</p>
+    <div class="form-group">
+      <input type="password" id="staff-pass" placeholder="Contraseña..." onkeyup="if(event.key === 'Enter') verificarPassword()">
+    </div>
+    <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+      <button class="btn-small" onclick="mostrarPantalla('screen-intro')">Volver</button>
+      <button class="neon-btn" style="padding: 10px 24px; font-size: 1rem;" onclick="verificarPassword()">Siguiente</button>
+    </div>
+    <p id="login-error" class="error-msg">❌ Contraseña incorrecta</p>
+  </div>
+
+  <!-- 5. PANEL DE STAFF -->
+  <div id="screen-staff" class="screen staff-panel">
+    <div class="staff-header">
+      <h2 style="font-size: 1.4rem;">🛡️ PANEL DE STAFF - LOS MINECRAFTEROS</h2>
+      <button class="btn-small" onclick="mostrarPantalla('screen-intro')">Salir del Panel</button>
+    </div>
+
+    <div class="staff-layout">
+      <!-- Menú izquierdo -->
+      <div class="staff-sidebar">
+        <button class="tab-btn active" id="tab-en_espera" onclick="cambiarTab('en_espera')">
+          <span>⏳ En espera</span>
+          <span id="count-en_espera">0</span>
+        </button>
+        <button class="tab-btn" id="tab-aceptadas" onclick="cambiarTab('aceptadas')">
+          <span>✅ Aceptadas</span>
+          <span id="count-aceptadas">0</span>
+        </button>
+        <button class="tab-btn" id="tab-rechazadas" onclick="cambiarTab('rechazadas')">
+          <span>❌ Rechazadas</span>
+          <span id="count-rechazadas">0</span>
+        </button>
+      </div>
+
+      <!-- Contenido derecho -->
+      <div class="staff-content" id="staff-content">
+        <p style="text-align: center; margin-top: 40px;">Cargando postulaciones...</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // CONFIGURACIÓN DE SUPABASE (PEGA TUS DATOS AQUÍ)
+    // ==========================================
+    const SUPABASE_URL = 'https://hdgupavajeemxubyswow.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_NT0nPRs9TvXMxvFp1EMi5A_C_GqwOqW';
+    // ==========================================
+
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let todasLasPostulaciones = [];
+    let tabActual = 'en_espera';
+
+    function mostrarPantalla(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    // Enviar postulación a Supabase
+    async function enviarPostulacion(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btn-submit');
+      btn.disabled = true;
+      btn.innerText = 'Enviando...';
+
+      const nuevaPostulacion = {
+        nick: document.getElementById('nick').value.trim(),
+        user_id: document.getElementById('user_id').value.trim(),
+        edad: document.getElementById('edad').value.trim(),
+        razon: document.getElementById('razon').value.trim(),
+        disponibilidad: document.getElementById('disponibilidad').value.trim(),
+        caso_raid: document.getElementById('caso_raid').value.trim(),
+        caso_discusion: document.getElementById('caso_discusion').value.trim(),
+        caso_sancion: document.getElementById('caso_sancion').value.trim(),
+        pais: document.getElementById('pais').value.trim(),
+        estado: 'en_espera'
+      };
+
+      const { error } = await supabaseClient
+        .from('postulaciones')
+        .insert([nuevaPostulacion]);
+
+      if (error) {
+        alert('Error al enviar la postulación. Revisa la configuración de Supabase: ' + error.message);
+        btn.disabled = false;
+        btn.innerText = 'Enviar Postulación';
+      } else {
+        document.getElementById('postulacion-form').reset();
+        mostrarPantalla('screen-success');
+      }
+    }
+
+    // Abrir Login de Staff
+    function abrirLoginStaff() {
+      document.getElementById('staff-pass').value = '';
+      document.getElementById('login-error').style.display = 'none';
+      mostrarPantalla('screen-login');
+    }
+
+    // Verificar contraseña
+    function verificarPassword() {
+      const pass = document.getElementById('staff-pass').value;
+      if (pass === 'Los-MC-2026') {
+        mostrarPantalla('screen-staff');
+        cargarPostulaciones();
+      } else {
+        document.getElementById('login-error').style.display = 'block';
+      }
+    }
+
+    // Cargar datos desde Supabase
+    async function cargarPostulaciones() {
+      const contenedor = document.getElementById('staff-content');
+      contenedor.innerHTML = '<p style="text-align:center; margin-top:40px;">Cargando desde la base de datos...</p>';
+
+      const { data, error } = await supabaseClient
+        .from('postulaciones')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        contenedor.innerHTML = `<p style="color:var(--neon-red);">Error al cargar: ${error.message}</p>`;
+        return;
+      }
+
+      todasLasPostulaciones = data || [];
+      actualizarContadores();
+      renderizarLista();
+    }
+
+    function actualizarContadores() {
+      document.getElementById('count-en_espera').innerText = todasLasPostulaciones.filter(p => p.estado === 'en_espera').length;
+      document.getElementById('count-aceptadas').innerText = todasLasPostulaciones.filter(p => p.estado === 'aceptadas').length;
+      document.getElementById('count-rechazadas').innerText = todasLasPostulaciones.filter(p => p.estado === 'rechazadas').length;
+    }
+
+    function cambiarTab(tab) {
+      tabActual = tab;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + tab).classList.add('active');
+      renderizarLista();
+    }
+
+    function renderizarLista() {
+      const contenedor = document.getElementById('staff-content');
+      const filtradas = todasLasPostulaciones.filter(p => p.estado === tabActual);
+
+      if (filtradas.length === 0) {
+        contenedor.innerHTML = `<p style="text-align:center; margin-top:40px; color:#88cc88; font-size:1.2rem;">No hay postulaciones en esta sección.</p>`;
+        return;
+      }
+
+      contenedor.innerHTML = '';
+      filtradas.forEach(post => {
+        const card = document.createElement('div');
+        card.className = 'app-card';
+        card.onclick = () => verDetalle(post.id);
+        card.innerHTML = `
+          <div class="app-card-info">
+            <h4>${escapeHTML(post.nick)}</h4>
+            <span>Edad: ${escapeHTML(post.edad)} años • País: ${escapeHTML(post.pais)}</span>
+          </div>
+          <span style="color:var(--neon-green); font-weight:bold;">Ver postulación ➔</span>
+        `;
+        contenedor.appendChild(card);
+      });
+    }
+
+    function verDetalle(id) {
+      const post = todasLasPostulaciones.find(p => p.id === id);
+      if (!post) return;
+
+      const contenedor = document.getElementById('staff-content');
+      contenedor.innerHTML = `
+        <div class="detail-box">
+          <button class="btn-small" style="margin-bottom: 15px;" onclick="renderizarLista()">⬅ Volver a la lista</button>
+          <h3 style="text-align:left; margin-bottom:18px; font-size:1.4rem;">Postulación de ${escapeHTML(post.nick)}</h3>
+
+          <div class="detail-item"><strong>Nick:</strong><p>${escapeHTML(post.nick)}</p></div>
+          <div class="detail-item"><strong>ID de usuario:</strong><p>${escapeHTML(post.user_id)}</p></div>
+          <div class="detail-item"><strong>Edad:</strong><p>${escapeHTML(post.edad)} años</p></div>
+          <div class="detail-item"><strong>País:</strong><p>${escapeHTML(post.pais)}</p></div>
+          <div class="detail-item"><strong>Disponibilidad diaria:</strong><p>${escapeHTML(post.disponibilidad)}</p></div>
+          <div class="detail-item"><strong>¿Por qué quiere formar parte del staff?:</strong><p>${escapeHTML(post.razon)}</p></div>
+          <div class="detail-item"><strong>¿Qué se hace en caso de raid?:</strong><p>${escapeHTML(post.caso_raid)}</p></div>
+          <div class="detail-item"><strong>¿Qué se hace si dos miembros discuten?:</strong><p>${escapeHTML(post.caso_discusion)}</p></div>
+          <div class="detail-item"><strong>¿Qué se hace si un usuario no está contento con una sanción?:</strong><p>${escapeHTML(post.caso_sancion)}</p></div>
+
+          ${post.estado === 'en_espera' ? `
+            <div class="action-buttons">
+              <button class="btn-accept" onclick="cambiarEstado(${post.id}, 'aceptadas')">✅ ACEPTAR</button>
+              <button class="btn-reject" onclick="cambiarEstado(${post.id}, 'rechazadas')">❌ RECHAZAR</button>
+            </div>
+          ` : `
+            <div style="margin-top: 15px; font-weight: bold; color: var(--neon-green);">
+              Estado actual: ${post.estado === 'aceptadas' ? '✅ ACEPTADA' : '❌ RECHAZADA'}
+            </div>
+          `}
+        </div>
+      `;
+    }
+
+    async function cambiarEstado(id, nuevoEstado) {
+      const { error } = await supabaseClient
+        .from('postulaciones')
+        .update({ estado: nuevoEstado })
+        .eq('id', id);
+
+      if (error) {
+        alert('Error al actualizar el estado: ' + error.message);
+        return;
+      }
+
+      const index = todasLasPostulaciones.findIndex(p => p.id === id);
+      if (index !== -1) {
+        todasLasPostulaciones[index].estado = nuevoEstado;
+      }
+
+      actualizarContadores();
+      renderizarLista();
+    }
+
+    function escapeHTML(str) {
+      if (!str) return '';
+      return str.toString()
+        .replace(/&/g, "&")
+        .replace(/</g, "<")
+        .replace(/>/g, ">")
+        .replace(/"/g, """)
+        .replace(/'/g, "'");
+    }
+  </script>
+</body>
+</html>
