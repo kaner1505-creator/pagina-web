@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Staff - Los Minecrafteros</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@600;700&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: radial-gradient(circle at center, #082e0d 0%, #031405 100%);
+      color: #e8ffe8; font-family: 'Rajdhani', sans-serif; padding: 30px 15px;
+    }
+    .panel {
+      max-width: 1050px; margin: auto; background: rgba(5, 28, 9, 0.95);
+      border: 2px solid #39ff14; border-radius: 16px; padding: 25px;
+      box-shadow: 0 0 25px rgba(57, 255, 20, 0.35);
+    }
+    .header {
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1.5px solid rgba(57, 255, 20, 0.4); padding-bottom: 15px; margin-bottom: 20px;
+    }
+    h2, h3 { font-family: 'Orbitron', sans-serif; color: #39ff14; }
+    .layout { display: flex; gap: 20px; min-height: 450px; }
+    .sidebar { width: 230px; display: flex; flex-direction: column; gap: 12px; border-right: 1.5px solid rgba(57, 255, 20, 0.3); padding-right: 15px; }
+    .tab {
+      background: #021205; border: 1.5px solid rgba(57, 255, 20, 0.4); color: #b8f5b5;
+      padding: 13px; border-radius: 8px; font-family: 'Orbitron', sans-serif; font-size: 0.85rem;
+      cursor: pointer; display: flex; justify-content: space-between;
+    }
+    .tab.active, .tab:hover { background: rgba(57, 255, 20, 0.2); border-color: #39ff14; color: #39ff14; }
+    .content { flex: 1; }
+    .card {
+      background: #031606; border: 1.5px solid rgba(57, 255, 20, 0.45); border-radius: 10px;
+      padding: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;
+    }
+    .card:hover { border-color: #39ff14; box-shadow: 0 0 12px rgba(57, 255, 20, 0.4); }
+    .detail { background: #020f04; border: 1.5px solid #39ff14; border-radius: 10px; padding: 20px; }
+    .item { margin-bottom: 12px; border-bottom: 1px dashed rgba(57, 255, 20, 0.25); padding-bottom: 8px; }
+    .item strong { color: #39ff14; display: block; }
+    .actions { display: flex; gap: 15px; margin-top: 20px; }
+    .btn-acc { flex: 1; background: rgba(57, 255, 20, 0.15); border: 2px solid #39ff14; color: #39ff14; padding: 12px; font-family: 'Orbitron', sans-serif; font-weight: bold; border-radius: 8px; cursor: pointer; }
+    .btn-acc:hover { background: #39ff14; color: #000; }
+    .btn-rej { flex: 1; background: rgba(255, 42, 95, 0.15); border: 2px solid #ff2a5f; color: #ff2a5f; padding: 12px; font-family: 'Orbitron', sans-serif; font-weight: bold; border-radius: 8px; cursor: pointer; }
+    .btn-rej:hover { background: #ff2a5f; color: #fff; }
+    .btn-sm { background: transparent; border: 1px solid #39ff14; color: #39ff14; padding: 6px 14px; border-radius: 6px; cursor: pointer; text-decoration: none; font-weight: bold; }
+    .btn-sm:hover { background: #39ff14; color: #000; }
+    @media (max-width: 720px) { .layout { flex-direction: column; } .sidebar { width: 100%; border-right: none; } }
+  </style>
+</head>
+<body>
+  <div class="panel">
+    <div class="header">
+      <h2>🛡️ PANEL DE STAFF</h2>
+      <a href="index.html" class="btn-sm">Salir</a>
+    </div>
+    <div class="layout">
+      <div class="sidebar">
+        <button class="tab active" id="tab-en_espera" onclick="verTab('en_espera')"><span>⏳ En espera</span><span id="c-en_espera">0</span></button>
+        <button class="tab" id="tab-aceptadas" onclick="verTab('aceptadas')"><span>✅ Aceptadas</span><span id="c-aceptadas">0</span></button>
+        <button class="tab" id="tab-rechazadas" onclick="verTab('rechazadas')"><span>❌ Rechazadas</span><span id="c-rechazadas">0</span></button>
+      </div>
+      <div class="content" id="content">Cargando...</div>
+    </div>
+  </div>
+
+  <script>
+    if (sessionStorage.getItem('staff_auth') !== 'ok') {
+      window.location.href = 'login.html';
+    }
+
+    const db = window.supabase.createClient('https://hdgupavajeemxubyswow.supabase.co', 'sb_publishable_NT0nPRs9TvXMxvFp1EMi5A_C_GqwOqW');
+    let datos = [];
+    let tab = 'en_espera';
+
+    async function cargar() {
+      const { data, error } = await db.from('postulaciones').select('*').order('created_at', { ascending: false });
+      if (error) {
+        document.getElementById('content').innerHTML = '<p style="color:#ff2a5f;">Error: ' + error.message + '</p>';
+        return;
+      }
+      datos = data || [];
+      document.getElementById('c-en_espera').innerText = datos.filter(p => p.estado === 'en_espera').length;
+      document.getElementById('c-aceptadas').innerText = datos.filter(p => p.estado === 'aceptadas').length;
+      document.getElementById('c-rechazadas').innerText = datos.filter(p => p.estado === 'rechazadas').length;
+      listar();
+    }
+
+    function verTab(t) {
+      tab = t;
+      document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + t).classList.add('active');
+      listar();
+    }
+
+    function listar() {
+      const box = document.getElementById('content');
+      const lista = datos.filter(p => p.estado === tab);
+      if (!lista.length) {
+        box.innerHTML = '<p style="text-align:center; margin-top:40px; color:#88cc88;">No hay postulaciones aquí.</p>';
+        return;
+      }
+      box.innerHTML = '';
+      lista.forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.onclick = () => detalle(p.id);
+        div.innerHTML = `<div><h4 style="color:#39ff14; font-size:1.2rem;">${esc(p.nick)}</h4><span>Edad: ${esc(p.edad)} años • País: ${esc(p.pais)}</span></div><strong style="color:#39ff14;">Ver ➔</strong>`;
+        box.appendChild(div);
+      });
+    }
+
+    function detalle(id) {
+      const p = datos.find(x => x.id === id);
+      if (!p) return;
+      document.getElementById('content').innerHTML = `
+        <div class="detail">
+          <button class="btn-sm" style="margin-bottom:15px;" onclick="listar()">⬅ Volver</button>
+          <h3 style="margin-bottom:15px;">Postulación de ${esc(p.nick)}</h3>
+          <div class="item"><strong>Nick:</strong><p>${esc(p.nick)}</p></div>
+          <div class="item"><strong>ID de usuario:</strong><p>${esc(p.user_id)}</p></div>
+          <div class="item"><strong>Edad:</strong><p>${esc(p.edad)}</p></div>
+          <div class="item"><strong>País:</strong><p>${esc(p.pais)}</p></div>
+          <div class="item"><strong>Disponibilidad:</strong><p>${esc(p.disponibilidad)}</p></div>
+          <div class="item"><strong>¿Por qué quiere ser staff?:</strong><p>${esc(p.razon)}</p></div>
+          <div class="item"><strong>Caso Raid:</strong><p>${esc(p.caso_raid)}</p></div>
+          <div class="item"><strong>Caso Discusión:</strong><p>${esc(p.caso_discusion)}</p></div>
+          <div class="item"><strong>Caso Sanción:</strong><p>${esc(p.caso_sancion)}</p></div>
+          ${p.estado === 'en_espera' ? `
+            <div class="actions">
+              <button class="btn-acc" onclick="estado(${p.id}, 'aceptadas')">✅ ACEPTAR</button>
+              <button class="btn-rej" onclick="estado(${p.id}, 'rechazadas')">❌ RECHAZAR</button>
+            </div>
+          ` : `<p style="margin-top:15px; color:#39ff14; font-weight:bold;">Estado: ${p.estado.toUpperCase()}</p>`}
+        </div>
+      `;
+    }
+
+    async function estado(id, est) {
+      const { error } = await db.from('postulaciones').update({ estado: est }).eq('id', id);
+      if (error) return alert('Error: ' + error.message);
+      cargar();
+    }
+
+    function esc(s) {
+      return (s || '').toString().replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>');
+    }
+
+    cargar();
+  </script>
+</body>
+</html>
